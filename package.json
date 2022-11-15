@@ -21,6 +21,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/http-errors": "^2.0.1",
     "@types/morgan": "^1.9.3"

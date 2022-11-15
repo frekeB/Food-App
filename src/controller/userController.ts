@@ -1,9 +1,27 @@
 import express,{Request,  Response} from 'express';
-export const Register  = (req:Request, res:Response) => {
+import { registerSchema, option } from '../utils/utility';
+import { GenerateSalt } from '../utils/utility';
+import { GeneratePassword } from '../utils/utility';
+
+
+export const Register  = async (req:Request, res:Response) => {
     try{
-        return res.status(200).json({message: "Successful"})
+       const {email, phoneNumber, password,confirm_password} = req.body;
+
+        const validateResult = registerSchema.validate(req.body,option);
+        if(validateResult.error){
+            return res.status(400).json({error: validateResult.error.details[0].message
+            })
+        }
+
+        //generate salt
+        const salt = await GenerateSalt();
+        //generate password
+        const userpassword = await GeneratePassword(password, salt);
+
     } catch (error){
         console.log(error)
 
     }
 }
+
