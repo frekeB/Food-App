@@ -13,7 +13,8 @@ model: this is where you structure your datatbase.
 
 ## MVC Modeling
 
-## set validation
- Joi, 
+## set Helper function
+ Joi validation, password Hashing, salt etc.
+ 
 
 ## API
