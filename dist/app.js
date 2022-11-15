@@ -15,6 +15,12 @@ config_1.db.sync().then(() => {
 }).catch(err => {
     console.log(err);
 });
+// const dbconnect =async () => {
+//    let data = await db.sync()
+//    if(data){
+//     console.log("Database connected")}
+//     return }
+//     dbconnect()
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, morgan_1.default)("dev"));

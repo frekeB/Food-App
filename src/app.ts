@@ -39,7 +39,7 @@ app.use('/users', userRouter)
 //configure a server
 const port = 4000;
 app.listen(port, () => {
-  console.log("Server is running on http://localhost:`${port}`");
+  console.log(`Server is running on http://localhost:${port}`);
 });
 
 
