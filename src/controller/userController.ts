@@ -18,10 +18,15 @@ export const Register  = async (req:Request, res:Response) => {
         const salt = await GenerateSalt();
         //generate password
         const userpassword = await GeneratePassword(password, salt);
+        console.log(userpassword)
 
-    } catch (error){
-        console.log(error)
-
+    } catch (err){
+        res.status(500).json({
+            Error: "Internal server error",
+            route: "/users/signup"
+        })
+    
+        }
     }
-}
+
 

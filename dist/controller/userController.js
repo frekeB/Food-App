@@ -25,9 +25,13 @@ const Register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const salt = yield (0, utility_2.GenerateSalt)();
         //generate password
         const userpassword = yield (0, utility_3.GeneratePassword)(password, salt);
+        console.log(userpassword);
     }
-    catch (error) {
-        console.log(error);
+    catch (err) {
+        res.status(500).json({
+            Error: "Internal server error",
+            route: "/users/signup"
+        });
     }
 });
 exports.Register = Register;
