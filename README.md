@@ -19,5 +19,9 @@ model: this is where you structure your datatbase.
 
 ## Generate oTp //16/11/
 crete a new file call notification 
+add twilio
+go to twilio and create account
+copy the ACOUNTID
+AUTHTOKEN AND
 
 ## API

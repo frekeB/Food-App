@@ -1,7 +1,8 @@
 import express,{Request,  Response} from 'express';
-import { registerSchema, option, GenerateSalt, GeneratePassword, GenerateOTP } from '../utils'
+import { registerSchema, option, GenerateSalt, GeneratePassword, GenerateOTP, onRequestOTP } from '../utils'
 import { UserInstance } from '../model/userModel';
 import { v4 as uuidv4 } from 'uuid';
+
 
 
 
@@ -47,6 +48,9 @@ export const Register  = async (req:Request, res:Response) => {
                 lat: 0,
                 verified: false
             });
+        //send OTP to user
+        await onRequestOTP(otp, phoneNumber);
+
         
             return res.status(201).json({
                 message: 'User created successfully',
