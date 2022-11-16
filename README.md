@@ -17,4 +17,7 @@ model: this is where you structure your datatbase.
  Joi validation, password Hashing, salt etc.
  
 
+## Generate oTp //16/11/
+crete a new file call notification 
+
 ## API

@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserInstance = void 0;
 const sequelize_1 = require("sequelize");
 const config_1 = require("../config");
 //building the model with sequelize
 class UserInstance extends sequelize_1.Model {
 }
+exports.UserInstance = UserInstance;
 UserInstance.init({
     id: {
         type: sequelize_1.DataTypes.UUIDV4,
@@ -66,7 +68,7 @@ UserInstance.init({
     },
     otp: {
         type: sequelize_1.DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
         validate: {
             notNull: {
                 msg: "OTP is required"

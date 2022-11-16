@@ -18,8 +18,9 @@ lat:number;
 verified:boolean
 
 }
+
 //building the model with sequelize
- class UserInstance extends Model <userAttributes>{}
+ export class UserInstance extends Model <userAttributes>{}
 
 UserInstance.init({
     id: {
@@ -81,12 +82,12 @@ UserInstance.init({
         },
         otp: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
               validate: {
                 notNull: {
                             msg: "OTP is required"
                         },
-                        notEmpty:{
+                 notEmpty:{
                             msg: "Provide a OTP"
                         },
               },
@@ -96,7 +97,7 @@ UserInstance.init({
                     allowNull: false,
               validate: {
                 notNull: {
-                            msg: "OTP has expired"
+                    msg: "OTP has expired"
                 },
             },
         },

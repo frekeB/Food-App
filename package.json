@@ -6,6 +6,7 @@
     "compile": "tsc -w"
   },
   "dependencies": {
+    "@types/uuid": "^8.3.4",
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "express": "^4.18.2",
