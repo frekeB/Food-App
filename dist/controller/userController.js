@@ -24,7 +24,6 @@ const Register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         //generate salt
         const salt = yield (0, utils_1.GenerateSalt)();
-        const userPassword = yield (0, utils_1.GeneratePassword)(password, salt);
         //generate password
         const userpassword = yield (0, utils_1.GeneratePassword)(password, salt);
         console.log(userpassword);
@@ -51,6 +50,8 @@ const Register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 lat: 0,
                 verified: false
             });
+            //send OTP to user
+            yield (0, utils_1.onRequestOTP)(otp, phoneNumber);
             return res.status(201).json({
                 message: 'User created successfully',
                 user

@@ -26,7 +26,7 @@ app.use(logger("dev"));
 app.use(cookieParser());
 
 
-//Router middleware
+//Router middleware{}
 //root routes
 app.use('/', indexRouter)
 app.use('/users', userRouter)

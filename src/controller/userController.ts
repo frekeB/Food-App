@@ -19,7 +19,7 @@ export const Register  = async (req:Request, res:Response) => {
 
         //generate salt
         const salt = await GenerateSalt();
-        const userPassword = await GeneratePassword(password, salt);
+        
 
         //generate password
         const userpassword = await GeneratePassword(password, salt);
@@ -51,7 +51,7 @@ export const Register  = async (req:Request, res:Response) => {
         //send OTP to user
         await onRequestOTP(otp, phoneNumber);
 
-        
+
             return res.status(201).json({
                 message: 'User created successfully',
                  user
