@@ -54,11 +54,12 @@ export const Register  = async (req:Request, res:Response) => {
                 });
             }
         return res.status(400).json({
-         message: 'User calready exist',
+         message: 'User already exist',
         }); 
 
     } 
     catch (err){
+        
         res.status(500).json({
             Error: "Internal server error",
             route: "/users/signup"
