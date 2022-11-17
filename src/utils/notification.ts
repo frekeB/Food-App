@@ -5,7 +5,7 @@ import {
   GMAIL_PASS,
   GMAIL_USER,
   fromAdminMail,
-  UserSubject,
+  userSubject,
 } from "../config";
 import nodemailer from "nodemailer";
 import { response } from "express";
@@ -33,7 +33,7 @@ export const onRequestOTP = async (otp: number, toPhoneNumber: string) => {
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
-  host: 'smtp.gmail.com',
+  //host: 'smtp.gmail.com',
   auth: {
     user: GMAIL_USER, // generated gmail user
     pass: GMAIL_PASS, //generated gmail password
@@ -51,17 +51,17 @@ export const mailSent = async (
   html: string
 ) => {
   try {
-    const response = await transporter.sendMail({
+    const response = await  transporter.sendMail({
       from: fromAdminMail,
       to,
-      subject: UserSubject,
+      subject:userSubject,
       html,
     });
     return response;
   } catch (err) {
     console.log(err);
   }
-};
+}
 
 export const emailHTML = (otp: number) => {
   let response = `

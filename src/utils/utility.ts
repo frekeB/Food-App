@@ -33,6 +33,11 @@ export const option ={
  }
 
  //generate signature
- export const GenarateSignature = async(payload:AuthPayload) =>{
+ export const GenerateSignature = async(payload:AuthPayload) =>{
     return jwt.sign(payload, APP_SECRET, {expiresIn: '1d'});
+
+ }
+
+ export const verifySignature = async (signature:string)=>{
+   return jwt.verify(signature,APP_SECRET,);
  }
