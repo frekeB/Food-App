@@ -1,51 +1,79 @@
-import { accountSid, authToken, fromAdminPhone, GMAIL_PASS, GMAIL_USER} from '../config';
-import nodemailer from 'nodemailer';
+import {
+  accountSid,
+  authToken,
+  fromAdminPhone,
+  GMAIL_PASS,
+  GMAIL_USER,
+  fromAdminMail,
+  UserSubject,
+} from "../config";
+import nodemailer from "nodemailer";
+import { response } from "express";
 
-export const GenerateOTP = ()=>{
-    const otp = Math.floor(1000 + Math.random() * 9000);
+export const GenerateOTP = () => {
+  const otp = Math.floor(1000 + Math.random() * 9000);
 
-    const expiry = new Date();
+  const expiry = new Date();
 
-    expiry.setTime(new Date().getTime() + (30*60*1000));
-    
-    return {otp, expiry};
-}
+  expiry.setTime(new Date().getTime() + 30 * 60 * 1000);
+
+  return { otp, expiry };
+};
 
 //
-    export const onRequestOTP = async (otp:number, toPhoneNumber:string) => {
-    const client = require('twilio')(accountSid, authToken); 
-    const response = await client.messages 
-    .create({  
-        body: `Your OTP is ${otp}`,       
-       to: toPhoneNumber,
-       from: fromAdminPhone
-     }) 
-     return response;
-}
+export const onRequestOTP = async (otp: number, toPhoneNumber: string) => {
+  const client = require("twilio")(accountSid, authToken);
+  const response = await client.messages.create({
+    body: `Your OTP is ${otp}`,
+    to: toPhoneNumber,
+    from: fromAdminPhone,
+  });
+  return response;
+};
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  host: 'smtp.gmail.com',
+  auth: {
+    user: GMAIL_USER, // generated gmail user
+    pass: GMAIL_PASS, //generated gmail password
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
 
 
-const  transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: GMAIL_USER,    // generated gmail user
-        pass: GMAIL_PASS,    //generated gmail password
-      },
-      tls: {
-        rejectUnauthorized: false
-        }
-})
-export const sendEmail = (
-        from: string, // sender address
-        to: string, // list of receivers
-        subject: string, // Subject line
-        text:string, // plain text body
-        html:string, // html body
-      ) => {
-        try{
-           await transporter.sendMail({
-           from:
-        });
-        }catch(err){
-            console.log(err);
-        }
-      };
+export const mailSent = async (
+  from: string, // sender address
+  to: string, // list of receivers
+  subject: string, // Subject line
+  html: string
+) => {
+  try {
+    const response = await transporter.sendMail({
+      from: fromAdminMail,
+      to,
+      subject: UserSubject,
+      html,
+    });
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const emailHTML = (otp: number) => {
+  let response = `
+         <div style= "max-width:700px margin:auto;
+          border:10px solid #add padding:50px 20px; 
+          font-size:110% ">
+          <h2 style = "text-align: center;
+          text-transformation:uppercase;
+          color:teal;">
+          Welcome to Freke store;
+          </h2>
+          <p> Hi there, your otp ${otp}</p>
+          </div>`;
+  return response;
+};

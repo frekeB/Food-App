@@ -14,3 +14,7 @@ export const fromAdminPhone = process.env.fromAdminPhone
 
 export const GMAIL_USER = process.env.GMAIL_USER
 export const GMAIL_PASS = process.env.GMAIL_PASS;
+export const fromAdminMail = process.env.fromAdminMail as string
+export const UserSubject = process.env.userSubject as string
+
+export const APP_SECRET = process.env.APP_SECRET!;

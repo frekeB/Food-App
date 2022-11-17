@@ -12,9 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GeneratePassword = exports.GenerateSalt = exports.option = exports.registerSchema = void 0;
+exports.GenarateSignature = exports.GeneratePassword = exports.GenerateSalt = exports.option = exports.registerSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const config_1 = require("../config");
+;
 exports.registerSchema = joi_1.default.object().keys({
     email: joi_1.default.string().required(),
     phoneNumber: joi_1.default.string().required(),
@@ -37,3 +40,8 @@ const GeneratePassword = (password, salt) => __awaiter(void 0, void 0, void 0, f
     return yield bcrypt_1.default.hash(password, salt);
 });
 exports.GeneratePassword = GeneratePassword;
+//generate signature
+const GenarateSignature = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    return jsonwebtoken_1.default.sign(payload, config_1.APP_SECRET, { expiresIn: '1d' });
+});
+exports.GenarateSignature = GenarateSignature;

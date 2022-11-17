@@ -3,7 +3,7 @@ import {db} from '../config';
 
 
 export interface userAttributes {
-id:String;
+id:string;
 email :string;
 password:string;
 firstName: string;
