@@ -31,9 +31,8 @@ export const onRequestOTP = async (otp: number, toPhoneNumber: string) => {
   return response;
 };
 
-const transporter = nodemailer.createTransport({
+let transport = nodemailer.createTransport({
   service: "gmail",
-  //host: 'smtp.gmail.com',
   auth: {
     user: GMAIL_USER, // generated gmail user
     pass: GMAIL_PASS, //generated gmail password
@@ -51,7 +50,7 @@ export const mailSent = async (
   html: string
 ) => {
   try {
-    const response = await  transporter.sendMail({
+    const response = await transport.sendMail({
       from: fromAdminMail,
       to,
       subject:userSubject,
@@ -65,13 +64,13 @@ export const mailSent = async (
 
 export const emailHTML = (otp: number) => {
   let response = `
-         <div style= "max-width:700px margin:auto;
-          border:10px solid #add padding:50px 20px; 
-          font-size:110% ">
+         <div style= "max-width:700px; margin:auto;
+          border:10px solid #ddd; padding:50px 20px; 
+          font-size:110%; ">
           <h2 style = "text-align: center;
           text-transformation:uppercase;
           color:teal;">
-          Welcome to Freke store;
+          Welcome to Freke store
           </h2>
           <p> Hi there, your otp ${otp}</p>
           </div>`;

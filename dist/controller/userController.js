@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyUser = exports.Register = void 0;
+exports.resendOTP = exports.Login = exports.verifyUser = exports.Register = void 0;
 const utils_1 = require("../utils");
 const userModel_1 = require("../model/userModel");
 const uuid_1 = require("uuid");
@@ -78,6 +78,7 @@ const Register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
     catch (err) {
+        console.log(err.message);
         res.status(500).json({
             Error: "Internal server error",
             route: "/users/signup",
@@ -90,32 +91,37 @@ exports.Register = Register;
 const verifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = req.params.signature;
-        const decode = (yield (0, utils_1.verifySignature)(token));
+        const decode = yield (0, utils_1.verifySignature)(token);
         //check if user id exist
-        const User = (yield userModel_1.UserInstance.findOne({
+        const User = yield userModel_1.UserInstance.findOne({
             where: { email: decode.email },
-        }));
+        });
         if (User) {
             const { otp } = req.body;
             if (User.otp === parseInt(otp) && User.otp_expiry >= new Date()) {
-                const updatedUser = yield userModel_1.UserInstance.update({
+                const updatedUser = (yield userModel_1.UserInstance.update({
                     verified: true,
-                }, { where: { email: decode.email } });
+                }, { where: { email: decode.email } }));
                 //Generate a new signature
                 let signature = yield (0, utils_1.GenerateSignature)({
                     id: updatedUser.id,
                     email: updatedUser.email,
                     verified: updatedUser.verified,
                 });
-                res.status(200).json({
-                    message: "you have successfully updated your account",
-                    signature,
-                    verified: updatedUser.verified,
+                if (updatedUser) {
+                    const user = (yield userModel_1.UserInstance.findOne({
+                        where: { email: decode.email },
+                    }));
+                    res.status(200).json({
+                        message: "you have successfully updated your account",
+                        signature,
+                        verified: updatedUser.verified,
+                    });
+                }
+                return res.status(400).json({
+                    message: "OTP is invalid or expired",
                 });
             }
-            return res.status(400).json({
-                message: "OTP is invalid or expired",
-            });
         }
     }
     catch (err) {
@@ -127,3 +133,86 @@ const verifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.verifyUser = verifyUser;
 /** ================================== Login User ============================== */
+const Login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        const validateResult = utils_1.loginSchema.validate(req.body, utils_1.option);
+        if (validateResult.error) {
+            return res.status(400).json({
+                error: validateResult.error.details[0].message,
+            });
+        }
+        //confirm user password==using compare
+        const User = yield userModel_1.UserInstance.findOne({
+            where: { email: email },
+        });
+        if (User) {
+            const validation = yield (0, utils_1.validatePassword)(password, User.password, User.salt);
+            if (validation) {
+                //Generate a new signature
+                let signature = yield (0, utils_1.GenerateSignature)({
+                    id: User.id,
+                    email: User.email,
+                    verified: User.verified,
+                });
+                //bycrpt:compare(password,User.password
+                return res.status(200).json({
+                    message: "Login successful",
+                    signature
+                });
+            }
+            res.status(400).json({
+                Error: validateResult
+            });
+        }
+    }
+    catch (err) {
+        console.log(err.message);
+        res.status(500).json({
+            Error: "Internal server error",
+            route: "/users/login",
+        });
+    }
+});
+exports.Login = Login;
+/** ================================== Resend OTP ============================== */
+const resendOTP = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const token = req.params.signature;
+        const decode = (yield (0, utils_1.verifySignature)(token));
+        const user = (yield userModel_1.UserInstance.findOne({
+            where: { email: decode.email }
+        }));
+        if (user) {
+            const { otp, expiry } = (0, utils_1.GenerateOTP)();
+            const updatedUser = (yield userModel_1.UserInstance.update({
+                otp,
+                otp_expiry: expiry,
+            }, { where: { email: decode.email } }));
+            if (updatedUser) {
+                const user = (yield userModel_1.UserInstance.findOne({
+                    where: { email: decode.email },
+                }));
+                //send OTP to user
+                yield (0, utils_1.onRequestOTP)(otp, user.phoneNumber);
+                //send email
+                const html = (0, utils_1.emailHTML)(otp);
+                yield (0, utils_1.mailSent)(config_1.fromAdminMail, user.email, config_1.userSubject, html);
+                return res.status(200).json({
+                    message: "OTP resent successfully send to your emailand phoneNumber",
+                });
+            }
+        }
+        //error sending OTP
+        return res.status(400).json({
+            message: "Error sending OTP",
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            Error: "Internal server error",
+            route: "/users/resend-otp/:signature",
+        });
+    }
+});
+exports.resendOTP = resendOTP;

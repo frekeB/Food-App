@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifySignature = exports.GenerateSignature = exports.GeneratePassword = exports.GenerateSalt = exports.option = exports.registerSchema = void 0;
+exports.validatePassword = exports.loginSchema = exports.verifySignature = exports.GenerateSignature = exports.GeneratePassword = exports.GenerateSalt = exports.option = exports.registerSchema = void 0;
 const joi_1 = __importDefault(require("joi"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -49,3 +49,11 @@ const verifySignature = (signature) => __awaiter(void 0, void 0, void 0, functio
     return jsonwebtoken_1.default.verify(signature, config_1.APP_SECRET);
 });
 exports.verifySignature = verifySignature;
+exports.loginSchema = joi_1.default.object().keys({
+    email: joi_1.default.string().required(),
+    password: joi_1.default.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+});
+const validatePassword = (SavedPassword, EnteredPass, salt) => __awaiter(void 0, void 0, void 0, function* () {
+    return (yield (0, exports.GeneratePassword)(EnteredPass, SavedPassword)) == SavedPassword;
+});
+exports.validatePassword = validatePassword;
