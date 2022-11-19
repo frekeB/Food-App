@@ -67,7 +67,7 @@ UserInstance.init({
         }
     },
     otp: {
-        type: sequelize_1.DataTypes.INTEGER,
+        type: sequelize_1.DataTypes.NUMBER,
         allowNull: false,
         validate: {
             notNull: {
@@ -75,17 +75,17 @@ UserInstance.init({
             },
             notEmpty: {
                 msg: "Provide a OTP"
-            },
-        },
+            }
+        }
     },
     otp_expiry: {
         type: sequelize_1.DataTypes.DATE,
         allowNull: false,
         validate: {
             notNull: {
-                msg: "OTP has expired"
-            },
-        },
+                msg: "OTP is expired"
+            }
+        }
     },
     lng: {
         type: sequelize_1.DataTypes.NUMBER,
@@ -100,12 +100,12 @@ UserInstance.init({
         allowNull: false,
         validate: {
             notNull: {
-                msg: "otp is required",
+                msg: "validation is required",
             },
             notEmpty: {
-                msg: "provide a otp"
-            },
-        },
+                msg: "provide validation"
+            }
+        }
     }
 }, {
     sequelize: config_1.db,

@@ -81,7 +81,7 @@ UserInstance.init({
            }
         },
         otp: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.NUMBER,
             allowNull: false,
               validate: {
                 notNull: {
@@ -89,17 +89,17 @@ UserInstance.init({
                         },
                  notEmpty:{
                             msg: "Provide a OTP"
-                        },
-              },
+                        }
+              }
             },
               otp_expiry: {
                     type: DataTypes.DATE,
                     allowNull: false,
               validate: {
                 notNull: {
-                    msg: "OTP has expired"
-                },
-            },
+                    msg: "OTP is expired"
+                }
+            }
         },
         lng: {
             type: DataTypes.NUMBER,
@@ -110,16 +110,16 @@ UserInstance.init({
             allowNull: true,
         },
         verified: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    msg: "otp is required",
+            type:DataTypes.BOOLEAN,
+            allowNull:false,
+            validate:{
+                notNull:{
+                    msg: "validation is required",
                 },
                 notEmpty: {
-                    msg: "provide a otp"
-            },
-        },
+                    msg: "provide validation"
+            }
+        }
     }
 
 

@@ -20,9 +20,10 @@ const config_1 = require("../config");
 ;
 exports.registerSchema = joi_1.default.object().keys({
     email: joi_1.default.string().required(),
-    phoneNumber: joi_1.default.string().required(),
     password: joi_1.default.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
-    confirm_password: joi_1.default.any().equal(joi_1.default.ref('password')).required().label('Confirm password').messages({ 'any.only': '{{#label}} does not match' }),
+    phoneNumber: joi_1.default.string().required(),
+    confirm_password: joi_1.default.any().equal(joi_1.default.ref('password'))
+        .required().label('Confirm password').messages({ 'any.only': '{{#label}} does not match' }),
 });
 exports.option = {
     abortEarly: false,
@@ -53,7 +54,7 @@ exports.loginSchema = joi_1.default.object().keys({
     email: joi_1.default.string().required(),
     password: joi_1.default.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
 });
-const validatePassword = (SavedPassword, EnteredPass, salt) => __awaiter(void 0, void 0, void 0, function* () {
-    return (yield (0, exports.GeneratePassword)(EnteredPass, SavedPassword)) == SavedPassword;
+const validatePassword = (enteredPass, savedPassword, salt) => __awaiter(void 0, void 0, void 0, function* () {
+    return (yield (0, exports.GeneratePassword)(enteredPass, salt)) == savedPassword;
 });
 exports.validatePassword = validatePassword;

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resendOTP = exports.Login = exports.verifyUser = exports.Register = void 0;
+exports.getSingleUser = exports.getAllUsers = exports.resendOTP = exports.Login = exports.verifyUser = exports.Register = void 0;
 const utils_1 = require("../utils");
 const userModel_1 = require("../model/userModel");
 const uuid_1 = require("uuid");
@@ -93,9 +93,9 @@ const verifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const token = req.params.signature;
         const decode = yield (0, utils_1.verifySignature)(token);
         //check if user id exist
-        const User = yield userModel_1.UserInstance.findOne({
+        const User = (yield userModel_1.UserInstance.findOne({
             where: { email: decode.email },
-        });
+        }));
         if (User) {
             const { otp } = req.body;
             if (User.otp === parseInt(otp) && User.otp_expiry >= new Date()) {
@@ -112,10 +112,10 @@ const verifyUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                     const user = (yield userModel_1.UserInstance.findOne({
                         where: { email: decode.email },
                     }));
-                    res.status(200).json({
+                    return res.status(200).json({
                         message: "you have successfully updated your account",
                         signature,
-                        verified: updatedUser.verified,
+                        verified: user.verified,
                     });
                 }
                 return res.status(400).json({
@@ -138,15 +138,13 @@ const Login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
         const validateResult = utils_1.loginSchema.validate(req.body, utils_1.option);
         if (validateResult.error) {
-            return res.status(400).json({
+            res.status(400).json({
                 error: validateResult.error.details[0].message,
             });
         }
         //confirm user password==using compare
-        const User = yield userModel_1.UserInstance.findOne({
-            where: { email: email },
-        });
-        if (User) {
+        const User = (yield userModel_1.UserInstance.findOne({ where: { email: email } }));
+        if (User.verified === true) {
             const validation = yield (0, utils_1.validatePassword)(password, User.password, User.salt);
             if (validation) {
                 //Generate a new signature
@@ -158,16 +156,17 @@ const Login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 //bycrpt:compare(password,User.password
                 return res.status(200).json({
                     message: "Login successful",
-                    signature
+                    signature,
+                    email: User.email,
+                    verified: User.verified,
                 });
             }
-            res.status(400).json({
-                Error: validateResult
+            return res.status(400).json({
+                Error: "Invalid credentials",
             });
         }
     }
     catch (err) {
-        console.log(err.message);
         res.status(500).json({
             Error: "Internal server error",
             route: "/users/login",
@@ -175,13 +174,13 @@ const Login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.Login = Login;
-/** ================================== Resend OTP ============================== */
+/** ================================== Resend OTP ============================== **/
 const resendOTP = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = req.params.signature;
         const decode = (yield (0, utils_1.verifySignature)(token));
         const user = (yield userModel_1.UserInstance.findOne({
-            where: { email: decode.email }
+            where: { email: decode.email },
         }));
         if (user) {
             const { otp, expiry } = (0, utils_1.GenerateOTP)();
@@ -216,3 +215,60 @@ const resendOTP = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.resendOTP = resendOTP;
+/** ================================== User Profile ============================== **/
+// get all users
+const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // const users = await UserInstance.findAll();
+        // return res.status(200).json({
+        //   message: "You have succesfull retrieved all users",
+        //   users
+        /** To target limit and offset**/
+        const limit = req.query.limit;
+        const users = yield userModel_1.UserInstance.findAndCountAll({
+            limit: limit,
+        });
+        return res.status(200).json({
+            message: "You have succesfull retrieved all users",
+            Count: users.count,
+            Users: users.rows
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            Error: "Internal server error",
+            route: "users/get-all-users",
+        });
+    }
+});
+exports.getAllUsers = getAllUsers;
+//get single users
+const getSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // const id = req.params.id;
+        const id = req.user.id;
+        //find user by id
+        const user = yield userModel_1.UserInstance.findOne({ where: { id: id } });
+        if (user) {
+            return res.status(200).json({
+                message: "You have successfully retrieved a user",
+                user
+            });
+        }
+        return res.status(400).json({
+            message: "User not found"
+        });
+    }
+    catch (err) {
+        res.status(500).json({
+            Error: "Internal server error",
+            route: "users/get-user",
+        });
+    }
+});
+exports.getSingleUser = getSingleUser;
+/** ================================== Query params ============================== **/
+//request.query(?) comes from the question mark in the url. 
+// anything that comes after the question mark must come in the form of key value pair e.g limit=10, sort=blues
+//request.params comes from the colon in the url. anything that comes after the colon must come in the form of a string e.g /users/1
+//request.body is used to get data from the body of the request. This is used when you want to send data to the server
