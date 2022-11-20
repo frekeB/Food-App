@@ -9,6 +9,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const users_1 = __importDefault(require("./routes/users"));
 const index_1 = __importDefault(require("./routes/index"));
 const config_1 = require("./config");
+const admin_1 = __importDefault(require("./routes/admin"));
 //Sequelize connection (to connect to the database)
 config_1.db.sync()
     .then(() => {
@@ -31,6 +32,7 @@ app.use((0, cookie_parser_1.default)());
 //root routes
 app.use("/", index_1.default);
 app.use("/users", users_1.default);
+app.use("/admins", admin_1.default);
 // app.get('/about', (req: Request, res:Response) => {
 //     res.status(200).json({message: "Hello World"})
 // });

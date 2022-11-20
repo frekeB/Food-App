@@ -160,6 +160,7 @@ const Login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     signature,
                     email: User.email,
                     verified: User.verified,
+                    role: User.role,
                 });
             }
             return res.status(400).json({

@@ -51,13 +51,7 @@ export const option ={
  export const validatePassword = async (enteredPass:string, savedPassword:string, salt:string) =>{
    return await  GeneratePassword(enteredPass, salt)==savedPassword
  }
- export const AdminSchema = Joi.object().keys({
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
-  password:Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
-  address: Joi.string().required(),
-  phoneNumber: Joi.string().required(),
-});
+
 
  export const updateSchema = Joi.object().keys({
   firstName: Joi.string().required(),
@@ -67,3 +61,11 @@ export const option ={
   
 });
 
+export const adminSchema = Joi.object().keys({
+  email: Joi.string().required(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
+  password:Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+  address: Joi.string().required(),
+  phoneNumber: Joi.string().required(),
+})

@@ -1,13 +1,11 @@
 import express from 'express';
-import { AdminRegister } from '../controller/adminControlle';
-import { updateUserProfile } from '../controller/updateProfile';
-import{ verifyUser, Login, resendOTP, getAllUsers, getSingleUser} from '../controller/userController';
+import { AdminRegister,superAdmin} from '../controller/adminControlle';
 import {auth} from '../middleware/auth';
 
 const router = express.Router();
 
 router.post('/create-admin',auth, AdminRegister);
-
+router.post('/create-super-admin',superAdmin);
 
 
 export default router;

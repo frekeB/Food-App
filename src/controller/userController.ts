@@ -20,6 +20,7 @@ import { jwt } from "twilio";
 import { JwtPayload } from "jsonwebtoken";
 import { options } from "joi";
 
+
 /** ================================== Register User ============================== */
 
 export const Register = async (req: Request, res: Response) => {
@@ -187,6 +188,7 @@ export const Login = async (req: Request, res: Response) => {
           signature,
           email: User.email,
           verified: User.verified,
+          role: User.role,
         });
       }
     return  res.status(400).json({

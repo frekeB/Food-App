@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import userRouter from "./routes/users";
 import indexRouter from "./routes/index";
 import { db } from "./config";
+import adminRouter from "./routes/admin";
 
 //Sequelize connection (to connect to the database)
 db.sync()
@@ -31,6 +32,7 @@ app.use(cookieParser());
 //root routes
 app.use("/", indexRouter);
 app.use("/users", userRouter);
+app.use("/admins", adminRouter);
 
 // app.get('/about', (req: Request, res:Response) => {
 //     res.status(200).json({message: "Hello World"})
