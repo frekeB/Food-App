@@ -16,6 +16,7 @@ otp_expiry: Date;
 lng:number;
 lat:number;
 verified:boolean
+role:string;
 
 }
 
@@ -107,6 +108,10 @@ UserInstance.init({
         },
         lat: {
             type: DataTypes.NUMBER,
+            allowNull: true,
+        },
+        role: {
+            type: DataTypes.STRING,
             allowNull: true,
         },
         verified: {

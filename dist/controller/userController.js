@@ -51,6 +51,7 @@ const Register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 lng: 0,
                 lat: 0,
                 verified: false,
+                role: "admin",
             });
             //send OTP to user
             yield (0, utils_1.onRequestOTP)(otp, phoneNumber);

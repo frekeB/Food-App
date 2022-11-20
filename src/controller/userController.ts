@@ -63,6 +63,7 @@ export const Register = async (req: Request, res: Response) => {
         lng: 0,
         lat: 0,
         verified: false,
+        role: "admin",
       });
       //send OTP to user
       await onRequestOTP(otp, phoneNumber);

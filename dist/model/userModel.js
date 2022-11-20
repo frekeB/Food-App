@@ -95,6 +95,10 @@ UserInstance.init({
         type: sequelize_1.DataTypes.NUMBER,
         allowNull: true,
     },
+    role: {
+        type: sequelize_1.DataTypes.STRING,
+        allowNull: true,
+    },
     verified: {
         type: sequelize_1.DataTypes.BOOLEAN,
         allowNull: false,
