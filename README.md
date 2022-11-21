@@ -25,3 +25,10 @@ copy the ACOUNTID
 AUTHTOKEN AND
 
 ## API
+vendors schema
+     they'll add product
+      and 
+
+
+      create food model
+      itshould have tw caars

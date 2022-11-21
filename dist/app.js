@@ -33,6 +33,7 @@ app.use((0, cookie_parser_1.default)());
 app.use("/", index_1.default);
 app.use("/users", users_1.default);
 app.use("/admins", admin_1.default);
+app.use('/');
 // app.get('/about', (req: Request, res:Response) => {
 //     res.status(200).json({message: "Hello World"})
 // });

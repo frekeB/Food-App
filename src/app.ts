@@ -34,6 +34,8 @@ app.use("/", indexRouter);
 app.use("/users", userRouter);
 app.use("/admins", adminRouter);
 
+app.use('/')
+
 // app.get('/about', (req: Request, res:Response) => {
 //     res.status(200).json({message: "Hello World"})
 // });

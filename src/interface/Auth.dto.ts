@@ -1,7 +1,5 @@
+import { vendorPayload } from "./vendor.dto";
+import { UserPayload } from "./user.dto";
 
- export interface AuthPayload {
-    id: string;
-    email: string;
-    verified: boolean;
 
- }
+export type AuthPayload = vendorPayload | UserPayload ;
